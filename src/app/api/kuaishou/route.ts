@@ -24,6 +24,7 @@ export async function GET() {
     }
     // 得到请求体
     const responseBody = await response.text();
+
     // 处理数据
     const result: HotListItem[] = [];
     const pattern = /window.__APOLLO_STATE__=(.*);\(function\(\)/s;
@@ -33,20 +34,27 @@ export async function GET() {
 
     // 获取所有分类
     const allItems = jsonObject['$ROOT_QUERY.visionHotRank({"page":"home"})']['items'];
+    console.warn(allItems);
     // 遍历所有分类
-    allItems.forEach((v: Record<string, any>) => {
-      // 基础数据
-      const image = jsonObject[v.id]['poster'];
-      const id = image.match(idPattern)[1];
-      // 数据处理
+    allItems.forEach((item: Record<string, any>) => {
+      const itemData = jsonObject[item.id];
+      if (!itemData) return;
+
+      const image = itemData.poster;
+      if (!image) return;
+
+      const idMatch = image.match(idPattern);
+      if (!idMatch?.[1]) return;
+
       result.push({
-        id,
-        title: jsonObject[v.id]['name'],
-        hot: jsonObject[v.id]['hotValue'].replace('万', '') * 10000,
-        url: `https://www.kuaishou.com/short-video/${id}`,
-        mobileUrl: `https://www.kuaishou.com/short-video/${id}`,
+        id: idMatch[1],
+        title: itemData.name,
+        hot: Number(itemData.hotValue?.replace('万', '')) * 10000 || 0,
+        url: `https://www.kuaishou.com/short-video/${idMatch[1]}`,
+        mobileUrl: `https://www.kuaishou.com/short-video/${idMatch[1]}`,
       });
     });
+    console.warn(result);
     return NextResponse.json(responseSuccess(result));
   } catch (error) {
     return NextResponse.json(responseError);
