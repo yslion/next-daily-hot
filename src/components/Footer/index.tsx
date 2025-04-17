@@ -9,13 +9,13 @@ import type { IconType } from 'react-icons';
 
 import { Link, Spacer, Tooltip, Button } from '@nextui-org/react';
 import Image from 'next/image';
-import {
-  RiGithubLine,
-  RiQuillPenLine,
-  RiWechatLine,
-  RiMailLine,
-  RiBarChart2Line,
-} from 'react-icons/ri';
+// import {
+//   RiGithubLine,
+//   RiQuillPenLine,
+//   RiWechatLine,
+//   RiMailLine,
+//   RiBarChart2Line,
+// } from 'react-icons/ri';
 
 import GlobalSetting from '@/components/GlobalSetting';
 
